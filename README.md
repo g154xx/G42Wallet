@@ -1,0 +1,2 @@
+# G42Wallet
+wallet
