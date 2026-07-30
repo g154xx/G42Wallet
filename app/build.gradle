@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.gag4.g4wallet'   // <-- ADĂUGAT (înlocuiește package-ul din manifest)
+    namespace 'com.gag4.g4wallet'
     compileSdk 34
 
     defaultConfig {
@@ -32,6 +32,4 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-
-    // Xposed a fost eliminat – nu mai este necesar pentru HCE
 }
