@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.gag4.g4wallet'
+    namespace 'com.gag4.g4wallet'   // <-- ADĂUGAT (înlocuiește package-ul din manifest)
     compileSdk 34
 
     defaultConfig {
@@ -20,6 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -28,7 +29,9 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    compileOnly 'de.robv.android.xposed:api:82'
-    compileOnly 'de.robv.android.xposed:api:82:sources'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+
+    // Xposed a fost eliminat – nu mai este necesar pentru HCE
 }
