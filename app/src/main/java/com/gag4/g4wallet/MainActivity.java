@@ -39,14 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private OfflineTester offlineTester;
     private OfflineForce offlineForce;
     private boolean isHceRunning = false;
-    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
         tvStatus = findViewById(R.id.tv_status);
         tvLog = findViewById(R.id.tv_log);
 
@@ -76,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
             }).start();
         });
 
-        // Card Info (placeholder)
+        // Card Info
         findViewById(R.id.btn_card_info).setOnClickListener(v ->
                 Toast.makeText(this, "Card Info: " + ConfigManager.getCardInfo(this), Toast.LENGTH_LONG).show()
         );
 
-        // Load Keys (încarcă cheile din setări)
+        // Load Keys
         findViewById(R.id.btn_load_keys).setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("G4WalletPrefs", MODE_PRIVATE);
             String keyHex = prefs.getString("emv_key_hex", "0123456789ABCDEF0123456789ABCDEF");
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Keys loaded", Toast.LENGTH_SHORT).show();
         });
 
-        // Generate Track2 (folosește setările)
+        // Generate Track2
         findViewById(R.id.btn_generate_track).setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("G4WalletPrefs", MODE_PRIVATE);
             String pan = prefs.getString("pan", "1234567890123456");
@@ -101,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Track2: " + track2, Toast.LENGTH_LONG).show();
         });
 
-        // Settings (deschide activitatea de setări)
+        // Settings
         findViewById(R.id.btn_settings).setOnClickListener(v ->
                 startActivity(new Intent(this, SettingsActivity.class))
         );
 
-        // Network (placeholder)
+        // Network
         findViewById(R.id.btn_network).setOnClickListener(v ->
                 Toast.makeText(this, "Network info placeholder", Toast.LENGTH_SHORT).show()
         );
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "G4² Wallet v2.0\nEMV Offline Tester", Toast.LENGTH_LONG).show()
         );
 
-        // Health Card & ID Card (placeholders)
+        // Health Card & ID Card
         findViewById(R.id.btn_health_card).setOnClickListener(v ->
                 Toast.makeText(this, "Health Card - future extension", Toast.LENGTH_SHORT).show()
         );
@@ -124,13 +122,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "ID Card - future extension", Toast.LENGTH_SHORT).show()
         );
 
-        // Inițializează Notification Channel
+        // Notification Channel
         createNotificationChannel();
     }
 
     // ---------- HCE Service Control ----------
     private void startHceService() {
-        // Pornim serviciul HCE ca foreground
         Intent serviceIntent = new Intent(this, HceCardService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
@@ -138,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             startService(serviceIntent);
         }
 
-        // Afișăm notificarea pentru a menține serviciul activ
         Notification notification = buildNotification();
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(NOTIFICATION_ID, notification);
@@ -202,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ---------- Menu Hamburger ----------
+    // ---------- Menu ----------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -216,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         } else if (id == R.id.menu_load_config) {
-            // Deschide file picker pentru a încărca JSON
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("application/json");
             startActivityForResult(Intent.createChooser(intent, "Select config file"), 1001);
@@ -232,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
-            // Încărcare config din fișier
             try {
                 ConfigManager.loadConfig(this, data.getData());
                 appendLog(">>> Config loaded from file.");
