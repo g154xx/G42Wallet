@@ -15,16 +15,17 @@ public class HceCardService extends HostApduService {
     private static final Map<String, byte[]> RESPONSE_MAP = new HashMap<>();
 
     static {
-        // SELECT PSE și AID rămân hardcodate (nu depind de setări)
+        // SELECT PSE
         RESPONSE_MAP.put(
                 "00A404000E325041592E5359532E444446303100",
                 HexUtils.fromHex("6F2A840E325041592E5359532E4444463031A518BF0C1561134F07A00000000410108701019F0A04000101049000")
         );
+        // SELECT Mastercard AID
         RESPONSE_MAP.put(
                 "00A4040007A000000004101000",
                 HexUtils.fromHex("6F408407A0000000041010A53550104465626974204D6173746572636172648701015F2D04726F656EBF0C169F4D020B0A9F6E07064200003030009F0A04000101049000")
         );
-        // READ RECORD-urile rămân hardcodate (nu depind de setări)
+        // READ RECORD-urile (hardcodate)
         RESPONSE_MAP.put(
                 "00B2011400",
                 HexUtils.fromHex("70819E9F420209465F24033203315A0853998207019456015F3401009F0702FFC09F080200028C279F02069F03069F1A0295055F2A029A039C019F37049F35019F45029F4C089F34039F21039F7C148D0C910A8A0295059F37049F4C088E0C0000000000000042031F039F0D05B4508400009F0E0500000000009F0F05B4708480005F280206429F4A018257135399820701945601D32032011492700673379F9000")
@@ -51,17 +52,17 @@ public class HceCardService extends HostApduService {
     public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
         String apduHex = HexUtils.toHex(apdu).replaceAll("\\s+", "");
 
-        // Dacă este GPO (80 A8 00 00 ...), construim răspuns dinamic
+        // GPO dinamic
         if (apduHex.startsWith("80A8")) {
             return buildDynamicGpoResponse();
         }
 
-        // Dacă este GENERATE AC (80 AE ...), construim răspuns dinamic
+        // GENERATE AC dinamic
         if (apduHex.startsWith("80AE")) {
             return buildDynamicGenerateAcResponse();
         }
 
-        // Alte comenzi – căutăm în hartă
+        // Alte comenzi
         byte[] response = RESPONSE_MAP.get(apduHex);
         if (response != null) {
             return response;
@@ -72,29 +73,18 @@ public class HceCardService extends HostApduService {
 
     private byte[] buildDynamicGpoResponse() {
         SharedPreferences prefs = getSharedPreferences("G4WalletPrefs", Context.MODE_PRIVATE);
-        // AIP-ul rămâne fix (suport offline)
         String aip = "1980";
-        // AFL-ul rămâne fix
         String afl = "1001010120010400";
-        // Construim răspunsul 77 0E 82 02 [AIP] 94 08 [AFL] 90 00
         String responseHex = "770E8202" + aip + "9408" + afl + "9000";
         return HexUtils.fromHex(responseHex);
     }
 
     private byte[] buildDynamicGenerateAcResponse() {
         SharedPreferences prefs = getSharedPreferences("G4WalletPrefs", Context.MODE_PRIVATE);
-        // Înlocuim TC-ul cu unul generat dinamic (dar pentru test, folosim cel hardcodat)
-        // Într-o implementare reală, aici s-ar genera TC folosind cheile și datele tranzacției.
+        // Pentru test, folosim TC-ul hardcodat din tranzacția reușită
         String tc = "9F2701809F360200049F4B81908E279E09DF961DC769B13D741958F32F5C2B95916077DE61DE82AE71A36FA91A23520BFEC6651F16C31B4503A6CC1AA45FF1461DA5108E5F058FFBAEB4BAA2B67C88237359F0DB0B8687942F9D5DD95A7F157A34FC140F27D872CFE2B58B1D8AA88086B56E482ACB6D87C9FAD69E98E4581FC0518B59F8AAEE928810F060B39E2FC64923009CAE5B136154501C6570899F10120110A0401322020000000000000000FF";
-        // Atașăm 9000 la final
         String responseHex = "77" + String.format("%02X", (tc.length() / 2) + 1) + tc + "9000";
         return HexUtils.fromHex(responseHex);
-    }
-
-    @Override
-    public byte[] getUid() {
-        // UID fix pentru a evita coliziunile
-        return new byte[]{(byte)0x04, (byte)0x12, (byte)0x34, (byte)0x56};
     }
 
     @Override
