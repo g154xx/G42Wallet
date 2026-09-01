@@ -20,8 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.gag4.g4wallet.engine.OfflineForce;
 import com.gag4.g4wallet.engine.OfflineTester;
@@ -122,11 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "ID Card - future extension", Toast.LENGTH_SHORT).show()
         );
 
-        // Notification Channel
         createNotificationChannel();
     }
 
-    // ---------- HCE Service Control ----------
     private void startHceService() {
         Intent serviceIntent = new Intent(this, HceCardService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -140,8 +136,9 @@ public class MainActivity extends AppCompatActivity {
         nm.notify(NOTIFICATION_ID, notification);
 
         isHceRunning = true;
-        btnStartHce.setText("Stop HCE");
-        btnStartHce.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+        btnStartHce.setText("STOP HCE");
+        btnStartHce.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                getResources().getColor(android.R.color.holo_red_dark)));
         updateStatus("HCE ACTIVE - Apropie telefonul de POS");
         appendLog(">>> HCE service started.");
         Toast.makeText(this, "HCE emulation started", Toast.LENGTH_SHORT).show();
@@ -154,8 +151,9 @@ public class MainActivity extends AppCompatActivity {
         nm.cancel(NOTIFICATION_ID);
 
         isHceRunning = false;
-        btnStartHce.setText("Start HCE");
-        btnStartHce.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+        btnStartHce.setText("START HCE");
+        btnStartHce.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                getResources().getColor(android.R.color.holo_green_dark)));
         updateStatus("HCE stopped");
         appendLog(">>> HCE service stopped.");
         Toast.makeText(this, "HCE emulation stopped", Toast.LENGTH_SHORT).show();
@@ -184,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ---------- UI Helpers ----------
     private void updateStatus(String msg) {
         runOnUiThread(() -> tvStatus.setText("Status: " + msg));
     }
@@ -198,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ---------- Menu ----------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
