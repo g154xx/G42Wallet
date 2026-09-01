@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">G42Wallet</string>
+    <string name="app_name">G4² Wallet</string>
+
     <string name="menu_diagnostic">Diagnostic</string>
     <string name="menu_card_info">Card Info</string>
     <string name="menu_offline_tools">Offline Tools</string>
@@ -10,7 +11,10 @@
     <string name="menu_about">About</string>
     <string name="menu_health_card">Health Card</string>
     <string name="menu_id_card">ID Card</string>
+    <string name="menu_start_hce">Start HCE</string>
+    <string name="menu_stop_hce">Stop HCE</string>
+
     <string name="status_ready">Ready</string>
-    <string name="status_scanning">Scanning POS...</string>
-    <string name="status_force">Executing Force...</string>
+    <string name="status_scanning">Scanning POS…</string>
+    <string name="status_force">Executing Force…</string>
 </resources>
