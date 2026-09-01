@@ -49,7 +49,7 @@
             android:id="@+id/et_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Amount (hex, 12 digits, e.g., 000000000500 for 5.00)"
+            android:hint="Amount (hex, 12 digits, e.g., 000000000500)"
             android:inputType="text" />
 
         <EditText
