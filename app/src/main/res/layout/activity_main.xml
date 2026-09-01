@@ -1,168 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F5F5F5"
     android:padding="16dp"
-    android:background="#f5f5f5">
+    tools:context=".MainActivity">
 
+    <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="G4² Wallet"
-        android:textSize="32sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#1a237e"
+        android:textColor="#1A237E"
         android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp" />
 
+    <!-- START HCE – full width, green -->
     <Button
         android:id="@+id/btn_start_hce"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start HCE"
+        android:layout_height="56dp"
+        android:text="START HCE"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:backgroundTint="#4CAF50"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        android:padding="16dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="12dp" />
 
+    <!-- Row 1: DIAGNOSTIC | CARD INFO -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
+
         <Button
             android:id="@+id/btn_diagnostic"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Diagnostic"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginEnd="4dp" />
+            android:text="DIAGNOSTIC"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginEnd="6dp" />
+
         <Button
             android:id="@+id/btn_card_info"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Card Info"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginStart="4dp" />
+            android:text="CARD INFO"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginStart="6dp" />
     </LinearLayout>
 
+    <!-- Row 2: LOAD KEYS | GENERATE TRACK2 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
+
         <Button
             android:id="@+id/btn_load_keys"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Load Keys"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginEnd="4dp" />
+            android:text="LOAD KEYS"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginEnd="6dp" />
+
         <Button
             android:id="@+id/btn_generate_track"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Generate Track2"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginStart="4dp" />
+            android:text="GENERATE TRACK2"
+            android:textColor="#212121"
+            android:textSize="12sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginStart="6dp" />
     </LinearLayout>
 
+    <!-- Row 3: SETTINGS | NETWORK -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
+
         <Button
             android:id="@+id/btn_settings"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Settings"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginEnd="4dp" />
+            android:text="SETTINGS"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginEnd="6dp" />
+
         <Button
             android:id="@+id/btn_network"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Network"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginStart="4dp" />
+            android:text="NETWORK"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginStart="6dp" />
     </LinearLayout>
 
+    <!-- Row 4: ABOUT | HEALTH CARD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
+
         <Button
             android:id="@+id/btn_about"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="About"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginEnd="4dp" />
+            android:text="ABOUT"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginEnd="6dp" />
+
         <Button
             android:id="@+id/btn_health_card"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Health Card"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:layout_marginStart="4dp" />
+            android:text="HEALTH CARD"
+            android:textColor="#212121"
+            android:textSize="13sp"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginStart="6dp" />
     </LinearLayout>
 
+    <!-- Row 5: ID CARD – full width -->
     <Button
         android:id="@+id/btn_id_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ID Card"
-        android:textSize="16sp"
-        android:padding="12dp"
+        android:layout_height="48dp"
+        android:text="ID CARD"
+        android:textColor="#212121"
+        android:textSize="13sp"
+        android:backgroundTint="#E0E0E0"
         android:layout_marginBottom="16dp" />
 
+    <!-- Status bar -->
     <TextView
         android:id="@+id/tv_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Status: Ready"
         android:textSize="15sp"
-        android:padding="10dp"
-        android:background="#e8eaf6"
-        android:textColor="#1a237e"
-        android:layout_marginBottom="12dp" />
+        android:textColor="#1A237E"
+        android:padding="12dp"
+        android:background="#E8EAF6"
+        android:layout_marginBottom="8dp" />
 
+    <!-- Log area -->
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#ffffff"
-        android:padding="8dp"
-        android:elevation="2dp">
+        android:background="#FFFFFF"
+        android:padding="12dp"
+        android:elevation="1dp">
+
         <TextView
             android:id="@+id/tv_log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="[Log]\n"
-            android:textSize="12sp"
+            android:text="[Log]"
+            android:textSize="13sp"
+            android:textColor="#424242"
             android:fontFamily="monospace"
-            android:textColor="#333333" />
+            android:textIsSelectable="true" />
     </ScrollView>
 
 </LinearLayout>
