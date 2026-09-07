@@ -20,9 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.core.view.GravityCompat;
-import com.google.android.material.navigation.NavigationView;
 
 import com.gag4.g4wallet.engine.OfflineForce;
 import com.gag4.g4wallet.engine.OfflineTester;
@@ -40,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private OfflineTester offlineTester;
     private OfflineForce offlineForce;
     private boolean isHceRunning = false;
-    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,33 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_diagnostic) {
-                runDiagnostic();
-            } else if (id == R.id.nav_card_info) {
-                showCardInfo();
-            } else if (id == R.id.nav_load_keys) {
-                loadKeys();
-            } else if (id == R.id.nav_generate_track) {
-                generateTrack2();
-            } else if (id == R.id.nav_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-            } else if (id == R.id.nav_load_config) {
-                loadConfig();
-            } else if (id == R.id.nav_network) {
-                Toast.makeText(this, "Network info placeholder", Toast.LENGTH_SHORT).show();
-            } else if (id == R.id.nav_about) {
-                Toast.makeText(this, "G4² Wallet v2.0\nEMV Offline Tester", Toast.LENGTH_LONG).show();
-            }
-            drawerLayout.closeDrawers();
-            return true;
-        });
 
         tvStatus = findViewById(R.id.tv_status);
         tvLog = findViewById(R.id.tv_log);
@@ -93,6 +62,51 @@ public class MainActivity extends AppCompatActivity {
         });
 
         createNotificationChannel();
+    }
+
+    // ---------- Meniu Hamburger ----------
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_diagnostic) {
+            runDiagnostic();
+            return true;
+        } else if (id == R.id.menu_card_info) {
+            showCardInfo();
+            return true;
+        } else if (id == R.id.menu_load_keys) {
+            loadKeys();
+            return true;
+        } else if (id == R.id.menu_generate_track) {
+            generateTrack2();
+            return true;
+        } else if (id == R.id.menu_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        } else if (id == R.id.menu_load_config) {
+            loadConfig();
+            return true;
+        } else if (id == R.id.menu_network) {
+            Toast.makeText(this, "Network info placeholder", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.menu_about) {
+            Toast.makeText(this, "G4² Wallet v2.0\nEMV Offline Tester", Toast.LENGTH_LONG).show();
+            return true;
+        } else if (id == R.id.menu_start_hce) {
+            if (isHceRunning) {
+                stopHceService();
+            } else {
+                startHceService();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // ---------- Menu Actions ----------
@@ -207,22 +221,6 @@ public class MainActivity extends AppCompatActivity {
             ScrollView sv = findViewById(R.id.scrollView);
             if (sv != null) sv.fullScroll(ScrollView.FOCUS_DOWN);
         });
-    }
-
-    // ---------- Menu Hamburger ----------
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            drawerLayout.openDrawer(GravityCompat.START);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

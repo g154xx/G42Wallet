@@ -1,105 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#000000">
 
-    <!-- Conținut principal -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1a1a1a"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:background="#1a1a1a"
+        android:padding="24dp"
+        android:layout_margin="16dp"
+        android:elevation="8dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1a1a1a"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:text="G4² Wallet"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
-        <LinearLayout
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hold to reader"
+            android:textSize="18sp"
+            android:textColor="#888888"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/status_ready"
+            android:textSize="16sp"
+            android:textColor="#4CAF50"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="#2a2a2a"
+            android:layout_marginBottom="16dp" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="#1a1a1a"
-            android:padding="24dp"
+            android:background="#0d0d0d"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tv_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="[Log]\n"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="#00ff00" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_start_hce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start HCE"
+            android:textColor="#ffffff"
+            android:backgroundTint="#4CAF50"
             android:layout_marginTop="16dp"
-            android:elevation="8dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="G4² Wallet"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Hold to reader"
-                android:textSize="18sp"
-                android:textColor="#888888"
-                android:gravity="center"
-                android:layout_marginBottom="24dp" />
-
-            <TextView
-                android:id="@+id/tv_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/status_ready"
-                android:textSize="16sp"
-                android:textColor="#4CAF50"
-                android:gravity="center"
-                android:padding="12dp"
-                android:background="#2a2a2a"
-                android:layout_marginBottom="16dp" />
-
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="#0d0d0d"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/tv_log"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="[Log]\n"
-                    android:textSize="12sp"
-                    android:fontFamily="monospace"
-                    android:textColor="#00ff00" />
-            </ScrollView>
-
-            <Button
-                android:id="@+id/btn_start_hce"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start HCE"
-                android:textColor="#ffffff"
-                android:backgroundTint="#4CAF50"
-                android:layout_marginTop="16dp"
-                android:padding="12dp" />
-
-        </LinearLayout>
+            android:padding="12dp" />
 
     </LinearLayout>
 
-    <!-- NavigationView (hamburger) -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#1a1a1a"
-        app:menu="@menu/nav_menu" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

@@ -1,4 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_start_hce" android:title="Start HCE" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_start_hce"
+        android:title="Start HCE"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_diagnostic"
+        android:title="Scan → Diagnostic"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_card_info"
+        android:title="iCard → Card Info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_load_keys"
+        android:title="A - Dinamic → Load Keys"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_generate_track"
+        android:title="B - T2 → Generate Track2"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="Setări → Settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_load_config"
+        android:title="Încărcare config"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_network"
+        android:title="Rețea → Network"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_about"
+        android:title="Despre → About"
+        app:showAsAction="never" />
 </menu>
