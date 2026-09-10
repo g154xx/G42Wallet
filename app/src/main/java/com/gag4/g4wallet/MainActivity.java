@@ -81,10 +81,12 @@ public class MainActivity extends AppCompatActivity implements ResultCallback {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return true;
         }
-        CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(this));
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+        if (adapter == null) return false;
+        CardEmulation cardEmulation = CardEmulation.getInstance(adapter);
         if (cardEmulation == null) return false;
         // Verificăm dacă aplicația este selectată ca default pentru HCE
-        // Pentru simplificare, returnăm mereu true și lăsăm utilizatorul să verifice manual
+        // Pentru simplitate, returnăm mereu true și lăsăm utilizatorul să verifice manual
         return true;
     }
 
@@ -95,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements ResultCallback {
 
     // ---------- HCE Service Control ----------
     private void startHceService() {
+        HceCardService.setCallback(this); // setăm callback static (fără putExtra)
+
         Intent serviceIntent = new Intent(this, HceCardService.class);
-        serviceIntent.putExtra("callback", this); // nu putem pasa direct, folosim singleton sau broadcast
-        HceCardService.setCallback(this); // setăm callback static
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
