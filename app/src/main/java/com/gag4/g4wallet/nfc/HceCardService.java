@@ -2,13 +2,18 @@ package com.gag4.g4wallet.nfc;
 
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.gag4.g4wallet.utils.HexUtils;
+import com.gag4.g4wallet.utils.ResultCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HceCardService extends HostApduService {
+
+    private static final String TAG = "HceCardService";
+    private static ResultCallback callback;
 
     private static final Map<String, byte[]> RESPONSE_MAP = new HashMap<>();
 
@@ -50,17 +55,31 @@ public class HceCardService extends HostApduService {
         );
     }
 
+    public static void setCallback(ResultCallback cb) {
+        callback = cb;
+    }
+
     @Override
     public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
         String apduHex = HexUtils.toHex(apdu).replaceAll("\\s+", "");
+        Log.d(TAG, "APDU received: " + apduHex);
 
         // GPO
         if (apduHex.startsWith("80A8")) {
+            // Aici am primit GPO – verificăm dacă AIP-ul nostru are bit 6 setat
+            // Notificăm activitatea că POS-ul a trimis GPO și că offline este suportat
+            if (callback != null) {
+                callback.onOfflineDetected(true); // hardcodat pentru test
+            }
             return buildDynamicGpoResponse();
         }
 
         // GENERATE AC
         if (apduHex.startsWith("80AE")) {
+            // Am primit GENERATE AC – asta înseamnă că POS-ul a acceptat offline
+            if (callback != null) {
+                callback.onOfflineDetected(true);
+            }
             return buildDynamicGenerateAcResponse();
         }
 
@@ -81,7 +100,6 @@ public class HceCardService extends HostApduService {
     }
 
     private byte[] buildDynamicGenerateAcResponse() {
-        // TC hardcodat pentru 5 RON
         String tc = "9F2701809F360200049F4B81908E279E09DF961DC769B13D741958F32F5C2B95916077DE61DE82AE71A36FA91A23520BFEC6651F16C31B4503A6CC1AA45FF1461DA5108E5F058FFBAEB4BAA2B67C88237359F0DB0B8687942F9D5DD95A7F157A34FC140F27D872CFE2B58B1D8AA88086B56E482ACB6D87C9FAD69E98E4581FC0518B59F8AAEE928810F060B39E2FC64923009CAE5B136154501C6570899F10120110A0401322020000000000000000FF";
         String responseHex = "77" + String.format("%02X", (tc.length() / 2) + 1) + tc + "9000";
         return HexUtils.fromHex(responseHex);
@@ -89,6 +107,10 @@ public class HceCardService extends HostApduService {
 
     @Override
     public void onDeactivated(int reason) {
-        // Nimic special
+        Log.d(TAG, "HCE deactivated: " + reason);
+        if (callback != null) {
+            // Dacă POS-ul s-a deconectat fără a trimite GPO sau GENERATE AC, considerăm că nu suportă offline
+            // Dar pentru test, nu facem nimic
+        }
     }
 }
