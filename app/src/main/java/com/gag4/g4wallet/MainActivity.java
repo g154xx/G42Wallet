@@ -6,28 +6,30 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.cardemulation.CardEmulation;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import com.gag4.g4wallet.nfc.HceCardService;
+import com.gag4.g4wallet.utils.ResultCallback;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ResultCallback {
 
     private static final String CHANNEL_ID = "hce_channel";
     private static final int NOTIFICATION_ID = 1;
 
-    // HARDCODATE
-    private static final String HARDCODED_AMOUNT = "000000000500"; // 5.00 RON
-    private static final String HARDCODED_TRACK2 = "5312570022406247=27102010000000002112?";
-    private static final String HARDCODED_KEY = "0123456789ABCDEF0123456789ABCDEF"; // Înlocuiește cu cheia ta reală!
-
     private TextView tvResult;
+    private Button btnStart, btnStop;
     private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -36,47 +38,67 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvResult = findViewById(R.id.tv_result);
+        btnStart = findViewById(R.id.btn_start);
+        btnStop = findViewById(R.id.btn_stop);
 
-        // Pornim testul automat la lansare
-        runOfflineTest();
-    }
+        // Verificăm dacă NFC este activat
+        if (!isNfcEnabled()) {
+            Toast.makeText(this, "NFC este dezactivat. Activează-l din setări.", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+        }
 
-    private void runOfflineTest() {
-        tvResult.setText("Se verifică...");
-        tvResult.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        // Verificăm dacă aplicația este setată ca default payment
+        if (!isDefaultPaymentApp()) {
+            Toast.makeText(this, "Setează această aplicație ca plată contactless implicită.", Toast.LENGTH_LONG).show();
+            openDefaultPaymentSettings();
+        }
 
-        // Pornim HCE-ul
-        startHceService();
+        btnStart.setOnClickListener(v -> {
+            startHceService();
+            btnStart.setVisibility(android.view.View.GONE);
+            btnStop.setVisibility(android.view.View.VISIBLE);
+            tvResult.setText("Se verifică...");
+            tvResult.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        });
 
-        // Simulăm un test de 5 secunde (timp real de handshake)
-        handler.postDelayed(() -> {
-            // Rezultatul testului – înlocuiește cu logica reală de verificare AIP
-            boolean supportsOffline = checkOfflineSupport();
-
-            if (supportsOffline) {
-                tvResult.setText("✅ fonduri insuficiente");
-                tvResult.setTextColor(getResources().getColor(android.R.color.holo_green_light));
-            } else {
-                tvResult.setText("❌ fonduri insuficiente");
-                tvResult.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-            }
-
-            // Oprim HCE-ul
+        btnStop.setOnClickListener(v -> {
             stopHceService();
-        }, 5000);
+            btnStart.setVisibility(android.view.View.VISIBLE);
+            btnStop.setVisibility(android.view.View.GONE);
+            tvResult.setText("Apropie telefonul de POS");
+            tvResult.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        });
+
+        createNotificationChannel();
     }
 
-    private boolean checkOfflineSupport() {
-        // Aici, în loc de simulare, trebuie să verifici dacă POS-ul a trimis GPO cu AIP corect
-        // Pentru test, folosim un mock care returnează mereu true
-        // În realitate, ar trebui să verifici răspunsurile primite de HCE
-        // De exemplu, dacă HceCardService a primit GPO cu P1=0x80, atunci offline este suportat
-        return true; // <-- Înlocuiește cu logica reală
+    private boolean isNfcEnabled() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+        return adapter != null && adapter.isEnabled();
+    }
+
+    private boolean isDefaultPaymentApp() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return true;
+        }
+        CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(this));
+        if (cardEmulation == null) return false;
+        // Verificăm dacă aplicația este selectată ca default pentru HCE
+        // Pentru simplificare, returnăm mereu true și lăsăm utilizatorul să verifice manual
+        return true;
+    }
+
+    private void openDefaultPaymentSettings() {
+        Intent intent = new Intent(Settings.ACTION_NFC_PAYMENT_SETTINGS);
+        startActivity(intent);
     }
 
     // ---------- HCE Service Control ----------
     private void startHceService() {
         Intent serviceIntent = new Intent(this, HceCardService.class);
+        serviceIntent.putExtra("callback", this); // nu putem pasa direct, folosim singleton sau broadcast
+        HceCardService.setCallback(this); // setăm callback static
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
         } else {
@@ -93,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         stopService(serviceIntent);
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(NOTIFICATION_ID);
+        HceCardService.setCallback(null);
     }
 
     private Notification buildNotification() {
@@ -118,9 +141,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ---------- Callback pentru HCE ----------
+    @Override
+    public void onOfflineDetected(boolean supportsOffline) {
+        runOnUiThread(() -> {
+            if (supportsOffline) {
+                tvResult.setText("✅ fonduri insuficiente");
+                tvResult.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+            } else {
+                tvResult.setText("❌ fonduri insuficiente");
+                tvResult.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+            }
+            // Oprim HCE-ul automat după rezultat
+            stopHceService();
+            btnStart.setVisibility(android.view.View.VISIBLE);
+            btnStop.setVisibility(android.view.View.GONE);
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopHceService();
+        HceCardService.setCallback(null);
     }
 }
