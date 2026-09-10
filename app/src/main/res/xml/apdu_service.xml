@@ -5,9 +5,7 @@
     <aid-group
         android:category="payment"
         android:description="@string/app_name">
-        <aid-filter android:name="A0000000041010" /> <!-- Mastercard -->
-        <aid-filter android:name="A0000000031010" /> <!-- Visa -->
-        <aid-filter android:name="A0000000250109" /> <!-- Visa (alt AID) -->
-        <aid-filter android:name="315041592E5359532E4444463031" /> <!-- PSE -->
+        <aid-filter android:name="A0000000041010" />
+        <aid-filter android:name="A0000000031010" />
     </aid-group>
 </host-apdu-service>

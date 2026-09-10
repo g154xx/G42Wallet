@@ -15,11 +15,19 @@ public class HexUtils {
     }
 
     public static byte[] fromHex(String hex) {
-        int len = hex.length();
+        String clean = hex.replaceAll("\\s+", "");
+        int len = clean.length();
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("Hex string must have even length");
+        }
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
+            int high = Character.digit(clean.charAt(i), 16);
+            int low = Character.digit(clean.charAt(i + 1), 16);
+            if (high == -1 || low == -1) {
+                throw new IllegalArgumentException("Invalid hex character");
+            }
+            data[i / 2] = (byte) ((high << 4) + low);
         }
         return data;
     }
